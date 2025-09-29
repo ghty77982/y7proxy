@@ -1,0 +1,478 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>y7 proxy - Interactive Website</title>
+    <style>
+      /* --- General Styles --- */
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #0d1117;
+        color: #c9d1d9;
+        cursor: none; /* Hide the default cursor for the particle effect */
+        overflow-x: hidden;
+      }
+
+      /* --- Mouse Particle Effect --- */
+      .particle {
+        position: fixed;
+        pointer-events: none;
+        border-radius: 50%;
+        background-color: white;
+        animation: fadeOut 1s forwards, drift 1s forwards;
+        opacity: 0;
+        z-index: 9999;
+      }
+
+      @keyframes fadeOut {
+        0% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0);
+        }
+      }
+
+      @keyframes drift {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(var(--x-drift), var(--y-drift));
+        }
+      }
+
+      /* --- Site Header --- */
+      .site-header {
+        background: #161b22;
+        padding: 1rem 2rem;
+        border-bottom: 2px solid #2ea043;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .logo {
+        color: #2ea043;
+        text-decoration: none;
+        font-size: 1.8rem;
+        font-weight: bold;
+        transition: color 0.3s ease;
+      }
+
+      .logo:hover {
+        color: #3fbc53;
+      }
+
+      .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        color: #2ea043;
+      }
+
+      .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      /* --- Main Content --- */
+      .site-main {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+
+      .content-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: center;
+        margin-top: 2rem;
+      }
+      
+      .card {
+        background: #161b22;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        flex: 1;
+        min-width: 250px;
+        border: 1px solid #30363d;
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+      }
+
+      .card iframe {
+        width: 100%;
+        border-radius: 6px;
+      }
+
+      /* --- Iframe Containers & Fullscreen --- */
+      .iframe-container {
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        border: 2px solid #2ea043;
+        box-shadow: 0 0 15px rgba(46, 160, 67, 0.4);
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        margin-bottom: 1rem;
+      }
+
+      .iframe-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+      .fullscreen-button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #2ea043;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+
+      .fullscreen-button:hover {
+        background-color: #3fbc53;
+      }
+
+      /* --- Footer --- */
+      .site-footer {
+        text-align: center;
+        padding: 1rem;
+        background: #161b22;
+        color: #6a737d;
+        margin-top: 2rem;
+      }
+
+      /* --- Responsive Design --- */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+          flex-direction: column;
+          position: absolute;
+          top: 60px;
+          left: 0;
+          width: 100%;
+          background: #161b22;
+          border-top: 1px solid #30363d;
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .menu-toggle {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Mouse Particle Effect Script -->
+    <script>
+      document.addEventListener('mousemove', function(e) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        document.body.appendChild(particle);
+
+        const size = Math.random() * 8 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+
+        particle.style.left = `${e.clientX}px`;
+        particle.style.top = `${e.clientY}px`;
+
+        const driftX = (Math.random() - 0.5) * 50;
+        const driftY = (Math.random() - 0.5) * 50;
+        particle.style.setProperty('--x-drift', `${driftX}px`);
+        particle.style.setProperty('--y-drift', `${driftY}px`);
+
+        const hue = Math.random() * 360;
+        particle.style.backgroundColor = `hsl(${hue}, 70%, 70%)`;
+
+        particle.style.opacity = '1';
+
+        particle.addEventListener('animationend', () => {
+          particle.remove();
+        });
+      });
+    </script>
+
+    <!-- Header -->
+    <header class="site-header">
+      <nav class="navbar">
+        <a href="#" class="logo">y7 proxy hub</a>
+        <a href="#" class="logo"></a>
+        <ul class="nav-links" id="navLinks"></ul>
+        <button class="menu-toggle" id="menuToggle">☰</button>
+      </nav>
+    </header>
+<!DOCTYPE html>
+</html>
+
+    <!-- Main Content -->
+    <main class="site-main">
+      <section class="content-section">
+        <!-- First iframe and its button -->
+        <div class="card">
+          <div class="iframe-container">
+            <iframe id="m-iframe" src="https://ut.blox.im/s/" title="y7 proxy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen></iframe>
+          </div>
+          <button class="fullscreen-button" onclick="goFullscreen('m-iframe')">
+            Go Fullscreen
+          </button>
+        </div>
+
+        <!-- Second iframe and its button -->
+        <div class="card">
+          <div class="iframe-container">
+            <iframe id="y-iframe" src="https://padlet.com/y7proxy/y7-proxy-bug-report-actawb6abl21qqvu" frameborder="0"
+              title="y7 proxy" allow="web-share" allowfullscreen></iframe>
+          </div>
+          <button class="fullscreen-button" onclick="goFullscreen('y-iframe')">
+            Go Fullscreen
+          </button>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <!-- Other cards from your original code -->
+        <div class="card">
+          <!-- Counter scripts -->
+          <a href='https://www.free-counters.org/'>www.Free-Counters.org</a>
+          <script type='text/javascript' src='https://www.freevisitorcounters.com/auth.php?id=d4670b4c274f7989a566f88151b2739915193ca6'></script>
+          <script type="text/javascript" src="https://www.freevisitorcounters.com/en/home/counter/1388092/t/0"></script>
+        </div>
+        <div class="card">
+        
+        <iframe src="https://2541094.playcode.io" frameborder="0"></iframe>
+        </div>
+        <div class="card">
+          <!-- Tickcounter script -->
+          <script>(function(d, s, id) { var js, pjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//www.tickcounter.com/static/js/loader.js"; pjs.parentNode.insertBefore(js, pjs); }(document, "script", "tickcounter-sdk"));</script>
+          <a data-type="countup" data-id="460099" class="tickcounter" style="display:block; left:0; width:100%; height:0; position:relative; padding-bottom:25%; margin:0 auto;" title="My count-up" href="//www.tickcounter.com/countup">My count-up</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <p>&copy; 2025 y7 proxy. All rights reserved.</p>
+    </footer>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Website with Advanced Cloak Feature</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+      
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    .cloak-button, .uncloak-button {
+      padding: 12px 24px;
+      font-size: 18px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      color: white;
+    }
+    .cloak-button {
+      background-color: #4CAF50; /* Green */
+    }
+    .uncloak-button {
+      background-color: #f44336; /* Red */
+    }
+    .cloak-button:hover {
+      background-color: #45a049;
+      transform: translateY(-2px);
+    }
+    .uncloak-button:hover {
+      background-color: #e53935;
+      transform: translateY(-2px);
+    }
+    #status-message {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Click a button to manage cloaking</h1>
+  <div class="button-container">
+    <button class="cloak-button" onclick="cloakWebsite()">Cloak Website</button>
+    <button class="uncloak-button" onclick="uncloakWebsite()" disabled>Uncloak Website</button>
+  </div>
+  <p id="status-message">Cloaker is inactive.</p>
+
+  <script>
+    let cloakedWindow = null;
+    const yourUrl = "https://2536913.playcode.io/";
+
+    function cloakWebsite() {
+      // Prevent opening multiple cloaked windows
+      if (cloakedWindow && !cloakedWindow.closed) {
+        return;
+      }
+
+      // Open a new tab with about:blank
+      cloakedWindow = window.open('about:blank', '_blank');
+
+      if (cloakedWindow) {
+        // Create the iframe
+        const iframe = cloakedWindow.document.createElement('iframe');
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.border = "none";
+        iframe.style.margin = "0";
+        iframe.style.padding = "0";
+        iframe.src = yourUrl;
+
+        // Overwrite the new tab's content with the iframe
+        cloakedWindow.document.body.appendChild(iframe);
+        cloakedWindow.document.body.style.margin = "0";
+        cloakedWindow.document.body.style.padding = "0";
+        
+        // Update the button states
+        document.querySelector('.cloak-button').disabled = true;
+        document.querySelector('.uncloak-button').disabled = false;
+        document.getElementById('status-message').textContent = "Cloaker is active.";
+      }
+    }
+
+    function uncloakWebsite() {
+      if (cloakedWindow && !cloakedWindow.closed) {
+        cloakedWindow.close();
+      }
+      
+      // Update the button states and clear focus listener
+      document.querySelector('.cloak-button').disabled = false;
+      document.querySelector('.uncloak-button').disabled = true;
+      document.getElementById('status-message').textContent = "Cloaker is inactive.";
+      window.removeEventListener('blur', autoCloak);
+      window.removeEventListener('focus', autoUncloak);
+    }
+    
+    // --- Advanced Evasion Technique ---
+    // Change the title and favicon when the window loses focus
+    function autoCloak() {
+      if (cloakedWindow && !cloakedWindow.closed) {
+        const title = "My Drive - Google Drive";
+        const favicon = "https://ssl.gstatic.com/images/branding/product/2x/drive_2020q4_32dp.png";
+        
+        cloakedWindow.document.title = title;
+        
+        let link = cloakedWindow.document.querySelector("link[rel*='icon']");
+        if (!link) {
+          link = cloakedWindow.document.createElement('link');
+          link.rel = 'icon';
+          cloakedWindow.document.head.appendChild(link);
+        }
+        link.href = favicon;
+      }
+    }
+
+    // Restore the original title and favicon when the window gains focus
+    function autoUncloak() {
+      if (cloakedWindow && !cloakedWindow.closed) {
+        const title = "Website with Advanced Cloak Feature";
+        const favicon = ""; // Set back to default or a new favicon
+        
+        cloakedWindow.document.title = title;
+        
+        let link = cloakedWindow.document.querySelector("link[rel*='icon']");
+        if (link) {
+          link.href = favicon;
+        }
+      }
+    }
+
+    // Add event listeners for focus and blur to the main window
+    window.addEventListener('blur', autoCloak);
+    window.addEventListener('focus', autoUncloak);
+
+  </script>
+
+</body>
+</html>
+
+    <!-- All JavaScript here -->
+    <script>
+      /**
+       * Handles fullscreen request for a given iframe ID.
+       * @param {string} iframeId The ID of the iframe element.
+       */
+      function goFullscreen(iframeId) {
+        const iframe = document.getElementById(iframeId);
+        
+        if (iframe && iframe.requestFullscreen) {
+          iframe.requestFullscreen().catch(err => {
+            alert(`Error attempting to enable fullscreen: ${err.message}`);
+          });
+        } else {
+          alert('Fullscreen is not supported on this browser or element.');
+        }
+      }
+
+      // Mobile Menu Toggle
+      const menuToggle = document.getElementById('menuToggle');
+      const navLinks = document.getElementById('navLinks');
+      menuToggle.addEventListener('click', () => {
+          navLinks.classList.toggle('active');
+      });
+    </script>
+  </body>
+</html>

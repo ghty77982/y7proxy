@@ -1,0 +1,216 @@
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* General styling */
+        body {
+            background-color: #0b0c10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #FF2974; /* Text color */
+            text-align: center;
+            overflow: hidden; /* Prevent scrollbars from particle effects */
+        }
+
+        /* Grid layout for the buttons */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 20px; /* Reduced gap for a tighter grid */
+            padding: 20px;
+        }
+
+        /* Style for each button link */
+        .button {
+            width: 150px; /* Smaller button size */
+            height: 150px; /* Smaller button size */
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            border-radius: 10px;
+            border: 2px solid #FF2974;
+            background-color: #1a1c22;
+            text-decoration: none;
+            /*glow effect using multiple box-shadow layers */
+            box-shadow:
+                0 0 5px #FF2974,
+                0 0 15px #FF2974,
+                0 0 30px #FF2974;
+            transition: box-shadow 0.4s ease-in-out, transform 0.4s ease-in-out;
+            transform: scale(1);
+        }
+
+        .button:hover {
+            /* Intensified glow on hover */
+            box-shadow:
+                0 0 10px #FF2974,
+                0 0 30px #FF2974,
+                0 0 60px #FF2974;
+            transform: scale(1.05);
+        }
+
+        /* Style for the image inside the button */
+        .button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0.7; /* Subdued image to emphasize glow */
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        .button:hover img {
+            opacity: 1; /* Image brightens on hover */
+        }
+
+        /* Container for particles */
+        .particle-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Individual particle styling and animation */
+        .particle {
+            position: absolute;
+            background-color: #FF2974;
+            border-radius: 50%;
+            opacity: 0;
+            will-change: transform, opacity;
+            top: 50%;
+            left: 50%;
+            /* Offset to center the particle on the button */
+            transform: translate(-50%, -50%);
+        }
+        
+        .button:hover .particle {
+            animation: particle-burst 1s forwards ease-out;
+        }
+
+        /* Particle animation keyframes to burst outwards */
+        @keyframes particle-burst {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="button-grid">
+        <!-- Replace the placeholder images and links with your own -->
+        <a href="https://www.google.com" target="_blank" class="button">
+            <div class="particle-container">
+                <div class="particle" style="top: 20%; left: 30%; width: 5px; height: 5px;"></div>
+                <div class="particle" style="top: 80%; left: 70%; width: 8px; height: 8px;"></div>
+                <div class="particle" style="top: 40%; left: 90%; width: 6px; height: 6px;"></div>
+            </div>
+            <img src="https://via.placeholder.com/300x300.png?text=Google" alt="Google Screenshot">
+        </a>
+        <a href="https://www.wikipedia.org" target="_blank" class="button">
+            <div class="particle-container">
+                <div class="particle" style="top: 10%; left: 60%; width: 7px; height: 7px;"></div>
+                <div class="particle" style="top: 70%; left: 20%; width: 5px; height: 5px;"></div>
+                <div class="particle" style="top: 50%; left: 50%; width: 9px; height: 9px;"></div>
+            </div>
+            <img src="https://via.placeholder.com/300x300.png?text=Wikipedia" alt="Wikipedia Screenshot">
+        </a>
+        <a href="https://www.youtube.com" target="_blank" class="button">
+            <div class="particle-container">
+                <div class="particle" style="top: 30%; left: 10%; width: 6px; height: 6px;"></div>
+                <div class="particle" style="top: 60%; left: 80%; width: 7px; height: 7px;"></div>
+                <div class="particle" style="top: 90%; left: 40%; width: 5px; height: 5px;"></div>
+            </div>
+            <img src="https://via.placeholder.com/300x300.png?text=YouTube" alt="YouTube Screenshot">
+        </a>
+        <a href="https://www.github.com" target="_blank" class="button">
+            <div class="particle-container">
+                <div class="particle" style="top: 5%; left: 50%; width: 8px; height: 8px;"></div>
+                <div class="particle" style="top: 50%; left: 15%; width: 6px; height: 6px;"></div>
+                <div class="particle" style="top: 85%; left: 85%; width: 7px; height: 7px;"></div>
+            </div>
+            <img src="https://via.placeholder.com/300x300.png?text=GitHub" alt="GitHub Screenshot">
+        </a>
+        <a href="#" class="button">
+            <div class="particle-container">
+                <div class="particle" style="top: 20%; left: 30%; width: 5px; height: 5px;"></div>
+                <div class="particle" style="top: 80%; left: 70%; width: 8px; height: 8px;"></div>
+                <div class="particle" style="top: 40%; left: 90%; width: 6px; height: 6px;"></div>
+            </div>
+            <img src="https://via.placeholder.com/300x300?text=Button+5" alt="Button 5">
+        </a>
+        <a href="#" class="button">
+            <div class="particle-container">
+                <div class="particle" style="top: 10%; left: 60%; width: 7px; height: 7px;"></div>
+                <div class="particle" style="top: 70%; left: 20%; width: 5px; height: 5px;"></div>
+                <div class="particle" style="top: 50%; left: 50%; width: 9px; height: 9px;"></div>
+            </div>
+            <img src="https://via.placeholder.com/300x300?text=Button+6" alt="Button 6">
+        </a>
+        <a href="#" class="button">
+            <div class="particle-container">
+                <div class="particle" style="top: 30%; left: 10%; width: 6px; height: 6px;"></div>
+                <div class="particle" style="top: 60%; left: 80%; width: 7px; height: 7px;"></div>
+                <div class="particle" style="top: 90%; left: 40%; width: 5px; height: 5px;"></div>
+            </div>
+            <img src="https://via.placeholder.com/300x300?text=Button+7" alt="Button 7">
+        </a>
+        <a href="#" class="button">
+            <div class="particle-container">
+                <div class="particle" style="top: 5%; left: 50%; width: 8px; height: 8px;"></div>
+                <div class="particle" style="top: 50%; left: 15%; width: 6px; height: 6px;"></div>
+                <div class="particle" style="top: 85%; left: 85%; width: 7px; height: 7px;"></div>
+            </div>
+            <img src="https://via.placeholder.com/300x300?text=Button+8" alt="Button 8">
+        </a>
+        <a href="#" class="button">
+            <div class="particle-container">
+                <div class="particle" style="top: 20%; left: 30%; width: 5px; height: 5px;"></div>
+                <div class="particle" style="top: 80%; left: 70%; width: 8px; height: 8px;"></div>
+                <div class="particle" style="top: 40%; left: 90%; width: 6px; height: 6px;"></div>
+            </div>
+            <img src="https://via.placeholder.com/300x300?text=Button+9" alt="Button 9">
+        </a>
+        <a href="#" class="button">
+            <div class="particle-container">
+                <div class="particle" style="top: 10%; left: 60%; width: 7px; height: 7px;"></div>
+                <div class="particle" style="top: 70%; left: 20%; width: 5px; height: 5px;"></div>
+                <div class="particle" style="top: 50%; left: 50%; width: 9px; height: 9px;"></div>
+            </div>
+            <img src="https://via.placeholder.com/300x300?text=Button+10" alt="Button 10">
+        </a>
+        <a href="#" class="button">
+            <div class="particle-container">
+                <div class="particle" style="top: 30%; left: 10%; width: 6px; height: 6px;"></div>
+                <div class="particle" style="top: 60%; left: 80%; width: 7px; height: 7px;"></div>
+                <div class="particle" style="top: 90%; left: 40%; width: 5px; height: 5px;"></div>
+            </div>
+            <img src="https://via.placeholder.com/300x300?text=Button+11" alt="Button 11">
+        </a>
+        <a href="#" class="button">
+            <div class="particle-container">
+                <div class="particle" style="top: 5%; left: 50%; width: 8px; height: 8px;"></div>
+                <div class="particle" style="top: 50%; left: 15%; width: 6px; height: 6px;"></div>
+                <div class="particle" style="top: 85%; left: 85%; width: 7px; height: 7px;"></div>
+            </div>
+            <img src="https://via.placeholder.com/300x300?text=Button+12" alt="Button 12">
+        </a>
+    </div>
+
+</body>
+</html>

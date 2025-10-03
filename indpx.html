@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded Script</title>
+</head>
+<body>
+
+<script>
+    // --- Original Functionality ---
+
+    // This async IIFE is the first part of the original script.
+    // It uses an iframe to override native dialogs and attempts to manipulate a React app's state.
+    (async () => {
+        let n = document.createElement('iframe');
+        document.body.append(n);
+        window.alert = n.contentWindow.alert.bind(window);
+        window.prompt = n.contentWindow.prompt.bind(window);
+        window.confirm = n.contentWindow.confirm.bind(window);
+        n.remove();
+
+        function reactHandler() {
+            // This function's success depends on the specific structure of the target React app.
+            // It uses an owner property that is internal to React and not part of the public API.
+            return Object.values(document.querySelector('#app > div > div'))[1].children[1]._owner;
+        }
+
+        try {
+            let fossils = Number(parseFloat(prompt('How many fossils do you want?')));
+            // This line attempts to set the state of a React component.
+            reactHandler().stateNode.setState({ fossils: fossils });
+            alert('Fossils added!');
+        } catch (e) {
+            if (confirm('Game error occurred, please report to discord server as soon as possible')) {
+                window.open('https://discord.gg/Nj9Zs5VtFp');
+            }
+        }
+    })();
+
+    // This is the second part of the original script, which creates a draggable footer.
+    function footer() {
+        let element = document.createElement('div');
+        element.style = `font-family: "Nunito", sans-serif; font-size: 14px; height: 65px; width: 175px; border: 4px solid rgb(15, 15, 15); background: rgb(240, 240, 240); position: absolute; top: 20px; left: 20px; border-radius: 10px; color: rgb(0, 0, 0); text-align: center; cursor: grab;`;
+        element.innerHTML = `<p>Made by gliz <br> My <a style="color: #0000ff;" href="https://twitter.com/glizuwu" target="_blank">twitter</a></p>`;
+        document.body.appendChild(element);
+
+        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        element.onmousedown = ((e = window.event) => {
+            e.preventDefault();
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+
+            document.onmouseup = (() => {
+                document.onmouseup = null;
+                document.onmousemove = null;
+                element.style.cursor = 'grab';
+            });
+            document.onmousemove = ((e) => {
+                e = e || window.event;
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                let top = (element.offsetTop - pos2) > 0 ? (element.offsetTop - pos2) : 0;
+                let left = (element.offsetLeft - pos1) > 0 ? (element.offsetLeft - pos1) : 0;
+                element.style.top = top + "px";
+                element.style.left = left + "px";
+            });
+        });
+    }
+
+    // Call the footer function to create the draggable element on page load.
+    footer();
+</script>
+
+</body>
+</html>
